@@ -1,0 +1,8 @@
+.project-inspector {
+    .x-treelist-item-selected {
+        background-color: #AAA;
+    }
+    .x-treelist-item-selected .x-treelist-container {
+        background-color: $background-color;
+    }
+}

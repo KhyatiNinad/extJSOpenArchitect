@@ -1,0 +1,17 @@
+{
+    "leaf": false,
+    "children": [
+        {
+            "text": "Editor",
+            "iconCls": "x-tool-type-edit",
+            "xtype": "homeview",
+            "leaf": true
+        },
+        {
+            "text": "Help",
+            "iconCls": "x-tool-type-help",
+            "xtype": "helpwidget",
+            "leaf": true
+        }
+    ]
+}

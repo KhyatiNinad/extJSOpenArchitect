@@ -1,0 +1,11 @@
+{
+    "templates": [
+        {
+            "name": "Blank Template",
+            "iconCls": "",
+            "view": {},
+            "controller": {},
+            "model": {}
+        }
+    ]
+}

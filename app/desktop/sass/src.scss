@@ -1,0 +1,231 @@
+.resize-panel {
+    border: 1px dashed $base-color;
+}
+
+.drop-target {
+    background-color: lighten($base-color, 20%);
+    opacity: 0.5;
+}
+
+.x-paneltitle {
+    padding: 4px 0px !important;
+    font-size: 14px !important;
+}
+
+.x-panelheader.x-horizontal {
+    min-height: 30px;
+}
+
+.x-tabs {
+    font-size: 12px;
+}
+
+.x-tab.x-has-text .x-inner-el,
+.x-tab .x-has-text .x-inner-el {
+    padding: 10px 5px;
+    font-size: 12px;
+}
+
+.x-dialog-body-el {
+    font-size: 14px !important;
+    color: #000 !important;
+
+}
+
+.form-dialog,
+.form-dialog .x-panel-body-el {
+    font-size: 14px !important;
+    color: #000 !important;
+
+}
+
+.x-dialog-body-el .x-innerhtml {
+    max-height: 400px;
+    overflow: auto;
+}
+
+.x-listitem-inner-el .x-innerhtml {
+    width: 100%;
+}
+
+.x-ace-editor .x-innerhtml {
+    width: 100%;
+    height: 100%;
+}
+
+.form-dialog .x-dataview-item {
+
+    margin-right: 20px;
+}
+
+.template {
+    width: 160px;
+    height: 120px;
+    border: 2px solid #666;
+    display: block;
+    background-color: transparent;
+    -webkit-box-shadow: 2px 2px 10px 0px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 2px 2px 10px 0px rgba(0, 0, 0, 0.75);
+    box-shadow: 2px 2px 10px 0px rgba(0, 0, 0, 0.75);
+    border-radius: 5px;
+}
+
+.form-dialog .x-selected {
+    background-color: #AAA;
+
+}
+
+.template-inner {
+    height: 100px;
+    width: 100%;
+    display: block;
+}
+
+.template-inner i {
+    padding: 40px;
+    /* width: 100%; */
+    font-size: 20px;
+    display: block;
+    text-align: center;
+}
+
+.template-name {
+    height: 20px;
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: center;
+    font-weight: bold;
+}
+
+.smartphone {
+    position: relative;
+    margin: auto;
+    border: 16px #333 solid;
+    border-top-width: 60px;
+    border-bottom-width: 60px;
+    border-radius: 36px;
+}
+
+/* The horizontal line on the top of the device */
+.smartphone:before {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 5px;
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #666;
+    border-radius: 10px;
+}
+
+/* The circle on the bottom of the device */
+.smartphone:after {
+    content: '';
+    display: block;
+    width: 35px;
+    height: 35px;
+    position: absolute;
+    left: 50%;
+    bottom: -65px;
+    transform: translate(-50%, -50%);
+    background: #666;
+    border-radius: 50%;
+}
+
+.auto {
+    width: 100%;
+    height: 100%;
+}
+
+/* The screen (or content) of the device */
+.smartphone .content {
+    background: white;
+}
+
+
+.iPhoneX {
+    width: 375px;
+    height: 812px;
+}
+
+.iPhone11 {
+    width: 414px;
+    height: 896px;
+}
+
+.iPhone11Pro {
+    width: 375px;
+    height: 812px;
+}
+
+.iPad {
+    width: 1024px;
+    height: 768px;
+}
+
+.iPadPro {
+    width: 1366px;
+    height: 1024px;
+}
+
+.Pixel3a {
+    width: 360px;
+    height: 720px;
+}
+
+.SurfaceGo2 {
+    width: 960px;
+    height: 540px;
+}
+
+.SurfaceProX {
+    width: 1440px;
+    height: 960px;
+}
+
+.tablet {
+    position: relative;
+    margin: auto;
+    border: 16px black solid;
+    border-top-width: 60px;
+    border-bottom-width: 60px;
+    border-radius: 36px;
+}
+
+/* The horizontal line on the top of the device */
+.tablet:before {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 5px;
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #333;
+    border-radius: 10px;
+}
+
+/* The circle on the bottom of the device */
+.tablet:after {
+    content: '';
+    display: block;
+    width: 35px;
+    height: 35px;
+    position: absolute;
+    left: 50%;
+    bottom: -65px;
+    transform: translate(-50%, -50%);
+    background: #333;
+    border-radius: 50%;
+}
+
+/* The screen (or content) of the device */
+.tablet .content {
+    background: white;
+    margin: -1px;
+}

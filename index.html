@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html manifest="">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=10, user-scalable=yes">
+    <title>extJS Open Architect</title>
+    <style>
+        /* Animation:https://tobiasahlin.com/spinkit/*/
+        .extJS-Loader-Box{width:80px;height:80px;margin:40px auto}.extJS-Loader-Box .extJS-Loader{width:33%;height:33%;background-color:#333;float:left;-webkit-animation:extJS-LoaderGridAnimation 1.3s infinite ease-in-out;animation:extJS-LoaderGridAnimation 1.3s infinite ease-in-out}.extJS-Loader-Box .extJS-Loader1{-webkit-animation-delay:.2s;animation-delay:.2s}.extJS-Loader-Box .extJS-Loader2{-webkit-animation-delay:.3s;animation-delay:.3s}.extJS-Loader-Box .extJS-Loader3{-webkit-animation-delay:.4s;animation-delay:.4s}.extJS-Loader-Box .extJS-Loader4{-webkit-animation-delay:.1s;animation-delay:.1s}.extJS-Loader-Box .extJS-Loader5{-webkit-animation-delay:.2s;animation-delay:.2s}.extJS-Loader-Box .extJS-Loader6{-webkit-animation-delay:.3s;animation-delay:.3s}.extJS-Loader-Box .extJS-Loader7{-webkit-animation-delay:0s;animation-delay:0s}.extJS-Loader-Box .extJS-Loader8{-webkit-animation-delay:.1s;animation-delay:.1s}.extJS-Loader-Box .extJS-Loader9{-webkit-animation-delay:.2s;animation-delay:.2s}@-webkit-keyframes extJS-LoaderGridAnimation{0%,100%,70%{-webkit-transform:scale3D(1,1,1);transform:scale3D(1,1,1)}35%{-webkit-transform:scale3D(0,0,1);transform:scale3D(0,0,1)}}@keyframes extJS-LoaderGridAnimation{0%,100%,70%{-webkit-transform:scale3D(1,1,1);transform:scale3D(1,1,1)}35%{-webkit-transform:scale3D(0,0,1);transform:scale3D(0,0,1)}}
+    </style>
+    <script type="text/javascript">
+        var Ext = Ext || {};
+        Ext.beforeLoad = function (tags) {
+            //var s = location.search;
+            var profile;
+            profile = 'desktop';
+            var currentProfile = sessionStorage.getItem('profile');
+            if(typeof currentProfile !== 'undefined')
+            if(currentProfile != null)
+            profile = currentProfile;
+
+            Ext.manifest = 'generatedFiles/' + profile;
+        };
+    </script>
+
+    <!-- The line below must be kept intact for Sencha Cmd to build your application -->
+    <script id="microloader" data-app="22c9ab0a-b84e-4dcc-b349-1e69cc4b0b62" type="text/javascript"
+        src="generatedFiles/bootstrap.js"></script>
+</head>
+
+<body class="launching">
+    <div id="splash" style="margin-top:20%;font-family:Arial;font-size:24px;text-align:center;color:#404040;">
+        <div id="theLoadingText">extJS Open Architect</div>
+        <div id="theLoadingText" style="font-size: 18px; margin-top:20px">Loading...</div>
+        <!--<i style="margin:20px;" class="fa fa-spinner fa-spin"></i> -->
+        <div class="extJS-Loader-Box">
+            <div class="extJS-Loader extJS-Loader1"></div>
+            <div class="extJS-Loader extJS-Loader2"></div>
+            <div class="extJS-Loader extJS-Loader3"></div>
+            <div class="extJS-Loader extJS-Loader4"></div>
+            <div class="extJS-Loader extJS-Loader5"></div>
+            <div class="extJS-Loader extJS-Loader6"></div>
+            <div class="extJS-Loader extJS-Loader7"></div>
+            <div class="extJS-Loader extJS-Loader8"></div>
+            <div class="extJS-Loader extJS-Loader9"></div>
+        </div>
+    </div>
+</body>
+
+</html>
