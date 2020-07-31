@@ -398,16 +398,6 @@ items = [{
         xtype: 'spacer',
         docked: 'top'
     },
-    {
-        xtype: 'map',
-        height: 200,
-        docked: 'top'
-    },
-    {
-        xtype: 'colorselector',
-        docked: 'top',
-        title: 'My Panel'
-    },
 
     {
         xtype: 'treelist'
@@ -522,9 +512,26 @@ containerClass = containerClass.sort(function (a, b) {
     else return 0;
 
 });
+var requires = [];
 console.log(containerClass.map((u) => {
+    if (requires.indexOf(u.name.trim()) < 0)
+        requires.push(u.name.trim());
     return u.name + " - " + u.displayName
 }));
+
+var ex = containerClass.map((u) => {
+    return u.extended
+});
+
+ex.forEach((x) => {
+    if (typeof x !== 'undefined') {
+        var s = x.split(',').forEach((sx) => {
+            if (requires.indexOf(sx.trim()) < 0)
+                requires.push(sx.trim());
+        });
+    }
+})
+console.log(JSON.stringify(requires));
 
 var data = {
     components: containerClass

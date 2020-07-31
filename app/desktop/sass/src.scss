@@ -3,8 +3,10 @@
 }
 
 .drop-target {
-    background-color: lighten($base-color, 20%);
+    background-color: #66FF66;
     opacity: 0.5;
+    border: 3px dashed #004400;
+
 }
 
 .x-paneltitle {
@@ -55,7 +57,8 @@
 
 .form-dialog .x-dataview-item {
 
-    margin-right: 20px;
+    margin: 10px;
+
 }
 
 .template {
@@ -64,9 +67,9 @@
     border: 2px solid #666;
     display: block;
     background-color: transparent;
-    -webkit-box-shadow: 2px 2px 10px 0px rgba(0, 0, 0, 0.75);
-    -moz-box-shadow: 2px 2px 10px 0px rgba(0, 0, 0, 0.75);
-    box-shadow: 2px 2px 10px 0px rgba(0, 0, 0, 0.75);
+    -webkit-box-shadow: 2px 2px 6px 0px rgba(0, 0, 0, 0.5);
+    -moz-box-shadow: 2px 2px 6px 0px rgba(0, 0, 0, 0.5);
+    box-shadow: 2px 2px 6px 0px rgba(0, 0, 0, 0.5);
     border-radius: 5px;
 }
 

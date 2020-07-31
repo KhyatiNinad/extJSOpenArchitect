@@ -57,7 +57,7 @@ Ext.define('extJSOpenArchitect.view.ProjectInspector', {
             },
 
             loadData: function (data) {
-                debugger;
+                // debugger;
                 this.getStore().setProxy({
                     type: 'memory',
                     data: data,

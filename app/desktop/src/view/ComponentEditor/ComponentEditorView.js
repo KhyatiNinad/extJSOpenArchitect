@@ -159,7 +159,7 @@ Ext.define('extJSOpenArchitect.view.ComponentEditor', {
                             groupable: false,
                             itemId: 'valueCol',
                             customEditor: function (record) {
-                                debugger;
+                                // debugger;
                                 var type = record.data.type;
                                 if (type.indexOf('"/"') > 0) {
                                     var opts = type.split("/").map((r) => {

@@ -20,7 +20,9 @@ Ext.define('RowDropper', {
             element: component.element,
             listeners: {
                 scope: me,
-                drop: this.makeRelayer('drop')
+                drop: this.makeRelayer('drop'),
+                dragenter: this.makeRelayer('dragenter'),
+                dragleave: this.makeRelayer('dragleave'),
             }
         });
     },
@@ -66,7 +68,17 @@ Ext.define('extJSOpenArchitect.view.ArchitectPanel', {
         'Ext.layout.Float',
         'Ext.Label',
         'Ext.tab.Panel',
-        'Ext.Dialog'
+        'Ext.Dialog',
+        "Ext.ActionSheet",
+        "Ext.Audio", "Ext.Base",
+        "Ext.BreadcrumbBar", "Ext.Button", "Ext.carousel.Carousel", "Ext.Component", "Ext.Container",
+        "Ext.dataview.Abstract", "Ext.dataview.Component", "Ext.dataview.List",
+        "Ext.dataview.NestedList", "Ext.Dialog", "Ext.Editor", "Ext.Evented",
+        "Ext.form.FieldSet", "Ext.form.Panel", "Ext.Gadget", "Ext.grid.Grid",
+        "Ext.grid.locked.Grid", "Ext.Img", "Ext.Label", "Ext.list.Tree",
+        "Ext.Media", "Ext.menu.Menu", "Ext.Panel", "Ext.panel.Accordion", "Ext.panel.Time", "Ext.Sheet",
+        "Ext.Spacer", "Ext.SplitButton", "Ext.tab.Panel", "Ext.Toolbar",
+        "Ext.Video", "Ext.Widget", "Ext.panel.Panel"
 
     ],
     controller: 'architectpanel',
@@ -106,7 +118,7 @@ Ext.define('extJSOpenArchitect.view.ArchitectPanel', {
                     "items": [],
                     "width": "auto",
                     "height": "auto",
-                    "html": "Welcome to <b>extJS Open Architect.</b> Your <b>WYSIWYG Editor</b> for creating extJS Views",
+                    "html": "Welcome to <b>extJS Open Architect</b> - Your <b>WYSIWYG Editor</b> for creating extJS Views.",
                     "centered": false
                 },
                 {
@@ -241,7 +253,9 @@ Ext.define('extJSOpenArchitect.view.ArchitectPanel', {
                     type: 'rowdrop',
                     recordType: 'component',
                     listeners: {
-                        drop: 'onComponentDrop'
+                        drop: 'onComponentDrop',
+                        dragenter: 'onComponentDragEnter',
+                        dragleave: 'onComponentDragLeave'
                     }
                 }]
             }, {

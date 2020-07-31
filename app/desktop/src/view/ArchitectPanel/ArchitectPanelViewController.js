@@ -2,6 +2,99 @@ Ext.define('extJSOpenArchitect.view.ArchitectPanelViewController', {
     extend: 'Ext.app.ViewController',
     alias: 'controller.architectpanel',
 
+    onComponentDrop: function (plugin, info) {
+        //debugger;
+        ////console.log(plugin.cmp.element.id);
+        var currentComponent = plugin.cmp.element;
+        var currentComponentItemId = plugin.cmp.getItemId();
+        plugin.cmp.parent.removeCls("drop-target");
+
+        var component = info.record.data;
+        // Process Drop!
+        var data = this.getViewModel().getData();
+        // //console.log(data.itemCount);
+
+        var thisComponent = JSON.parse(JSON.stringify(component));
+        thisComponent.children = [];
+        var alias = component.alias ? (component.alias.indexOf(',') > 0 ? component.alias.split(',')[0] : component.alias) : component.name;
+        var name = component.name;
+        var thisAlias = alias.replace("widget.", "");
+        thisComponent.text = thisAlias.replace(
+            /\w\S*/g,
+            function (txt) {
+                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            }
+        ); //+ " " + data.itemCount;
+        thisComponent.leaf = true;
+
+        this.addProperties(thisComponent, component.extended);
+
+
+        thisComponent.iconCls = (component.extends.indexOf('Container') >= 0 || alias.indexOf('ontainer') >= 0) ?
+            'x-fa fa-inbox' : 'x-fa fa-circle-notch';
+
+        thisComponent.itemId = "component_" + data.itemCount;
+        thisComponent.id = thisComponent.itemId;
+
+        if (currentComponentItemId !== "designerPanel" && currentComponentItemId !== 'parentDesignerPanel')
+            thisComponent.parentId = currentComponentItemId;
+
+
+        //data.components.push(thisComponent);
+
+        data.itemCount = data.itemCount + 1;
+
+
+        var configTree = this.setChildHierarchy(data.components, thisComponent, currentComponentItemId);
+        if (!configTree)
+            data.components.push(thisComponent);
+
+        //console.log(data.components);
+
+        var renderConfig = this.getViewConfig(thisComponent);
+        //console.log(renderConfig);
+        var renderTo = Ext.ComponentQuery.query('architectpanel')[0].down("#" + currentComponentItemId);
+        var that = this;
+        if (typeof renderConfig !== 'undefined') {
+            if (renderConfig != null) {
+                this.renderComp(renderTo, renderConfig);
+            }
+        }
+
+        data.currentNode = "";
+
+        var piTree = Ext.ComponentQuery.query('architectpanel')[0].down("#projectInspector");
+        var store = this.getViewModel().getStore('componentsTree');
+        var treeStore = piTree.getStore();
+        setTimeout(function (e) {
+            treeStore.setRoot({
+                text: 'Root',
+                children: JSON.parse(JSON.stringify(data.components))
+            });
+            var ce = that.getView().down("componenteditor");
+            var cxStore = ce.getViewModel().getStore("configs");
+            var pxStore = ce.getViewModel().getStore("properties");
+            var mxStore = ce.getViewModel().getStore("methods");
+            var exStore = ce.getViewModel().getStore("events");
+
+            cxStore.loadData([]);
+            pxStore.loadData([]);
+            mxStore.loadData([]);
+            exStore.loadData([]);
+        }, 100);
+    },
+
+    onComponentDragLeave: function (plugin, info) {
+
+        //console.log('Drag Leave');
+        plugin.cmp.parent.removeCls("drop-target")
+    },
+    onComponentDragEnter: function (plugin, info) {
+        //console.log('Drag Enter');
+        plugin.cmp.parent.addCls("drop-target")
+
+    },
+
     onReset: function () {
 
         var that = this;
@@ -102,7 +195,7 @@ Ext.define('extJSOpenArchitect.view.ArchitectPanelViewController', {
         }
     },
     onPreviewPanelChange: function (cmp, newVal, oldVal) {
-        debugger;
+        //  debugger;
         Ext.ComponentQuery.query("#previewDisplayTop")[0].removeCls("smartphone");
         Ext.ComponentQuery.query("#previewDisplayTop")[0].removeCls("tablet");
         Ext.ComponentQuery.query("#previewDisplayTop")[0].removeCls("iPhoneX");
@@ -149,7 +242,7 @@ Ext.define('extJSOpenArchitect.view.ArchitectPanelViewController', {
         if (Array.isArray(parent)) {
             parent.forEach((p) => {
                 var renderConfig = this.getViewConfig(p, true);
-                console.log(renderConfig);
+                //console.log(renderConfig);
 
                 var that = this;
                 if (typeof renderConfig !== 'undefined') {
@@ -162,7 +255,7 @@ Ext.define('extJSOpenArchitect.view.ArchitectPanelViewController', {
         } else {
             parent.children.forEach((p) => {
                 var renderConfig = this.getViewConfig(p, true);
-                console.log(renderConfig);
+                //console.log(renderConfig);
 
                 var that = this;
                 if (typeof renderConfig !== 'undefined') {
@@ -335,98 +428,6 @@ Ext.define('extJSOpenArchitect.view.ArchitectPanelViewController', {
         });
         this.setCode();
     },
-    onComponentDrop: function (plugin, info) {
-        //debugger;
-        //console.log(plugin.cmp.element.id);
-        var currentComponent = plugin.cmp.element;
-        var currentComponentItemId = plugin.cmp.getItemId();
-
-        var component = info.record.data;
-        // Process Drop!
-        var data = this.getViewModel().getData();
-        // console.log(data.itemCount);
-
-        var thisComponent = JSON.parse(JSON.stringify(component));
-        thisComponent.children = [];
-        var alias = component.alias ? (component.alias.indexOf(',') > 0 ? component.alias.split(',')[0] : component.alias) : component.name;
-        var name = component.name;
-        var thisAlias = alias.replace("widget.", "");
-        thisComponent.text = thisAlias; //+ " " + data.itemCount;
-        thisComponent.leaf = true;
-
-        this.addProperties(thisComponent, component.extended);
-        /*
-        var properties = component.items ? (component.items.length > 0 ? component.items : []) : [];
-        properties = properties.filter((x) => {
-            return x.$type === 'configs';
-        });
-
-        properties.forEach((e) => {
-            if (typeof e.items !== 'undefined') {
-                e.items.forEach((x) => {
-
-                    if (x.name === 'html' || x.name === 'text') {
-                        x.value = thisAlias;
-                    }
-                });
-            }
-        });
-*/
-
-
-        thisComponent.iconCls = (component.extends.indexOf('Container') >= 0 || alias.indexOf('ontainer') >= 0) ?
-            'x-fa fa-inbox' : 'x-fa fa-circle-notch';
-
-        thisComponent.itemId = "component_" + data.itemCount;
-        thisComponent.id = thisComponent.itemId;
-
-        if (currentComponentItemId !== "designerPanel" && currentComponentItemId !== 'parentDesignerPanel')
-            thisComponent.parentId = currentComponentItemId;
-
-
-        //data.components.push(thisComponent);
-
-        data.itemCount = data.itemCount + 1;
-
-
-        var configTree = this.setChildHierarchy(data.components, thisComponent, currentComponentItemId);
-        if (!configTree)
-            data.components.push(thisComponent);
-
-        console.log(data.components);
-
-        var renderConfig = this.getViewConfig(thisComponent);
-        console.log(renderConfig);
-        var renderTo = Ext.ComponentQuery.query('architectpanel')[0].down("#" + currentComponentItemId);
-        var that = this;
-        if (typeof renderConfig !== 'undefined') {
-            if (renderConfig != null) {
-                this.renderComp(renderTo, renderConfig);
-            }
-        }
-
-        data.currentNode = "";
-
-        var piTree = Ext.ComponentQuery.query('architectpanel')[0].down("#projectInspector");
-        var store = this.getViewModel().getStore('componentsTree');
-        var treeStore = piTree.getStore();
-        setTimeout(function (e) {
-            treeStore.setRoot({
-                text: 'Root',
-                children: JSON.parse(JSON.stringify(data.components))
-            });
-            var ce = that.getView().down("componenteditor");
-            var cxStore = ce.getViewModel().getStore("configs");
-            var pxStore = ce.getViewModel().getStore("properties");
-            var mxStore = ce.getViewModel().getStore("methods");
-            var exStore = ce.getViewModel().getStore("events");
-
-            cxStore.loadData([]);
-            pxStore.loadData([]);
-            mxStore.loadData([]);
-            exStore.loadData([]);
-        }, 100);
-    },
 
     addProperties: function (c, ex) {
 
@@ -505,7 +506,7 @@ Ext.define('extJSOpenArchitect.view.ArchitectPanelViewController', {
         if (Array.isArray(parent)) {
             parent.forEach((p) => {
                 var renderConfig = this.getViewConfig(p);
-                console.log(renderConfig);
+                //  console.log(renderConfig);
 
                 var that = this;
                 if (typeof renderConfig !== 'undefined') {
@@ -517,7 +518,7 @@ Ext.define('extJSOpenArchitect.view.ArchitectPanelViewController', {
         } else {
             parent.children.forEach((p) => {
                 var renderConfig = this.getViewConfig(p);
-                console.log(renderConfig);
+                //   console.log(renderConfig);
 
                 var that = this;
                 if (typeof renderConfig !== 'undefined') {
@@ -719,7 +720,7 @@ Ext.define('extJSOpenArchitect.view.ArchitectPanelViewController', {
 
         var cx = {
             xtype: thisAlias,
-            items: items,
+            //items: items,
             //text: 'My' + thisAlias,
             //html: 'My' + thisAlias,
             width: e.width ? e.width : 'auto',
@@ -744,41 +745,54 @@ Ext.define('extJSOpenArchitect.view.ArchitectPanelViewController', {
         if (cx.floated && cx.floated === 'true')
             isFloat = true;
 
+
         if (properties.length > 0) {
             properties[0].items.forEach((p) => {
                 var isSet = false;
-                if (typeof p.value !== 'undefined') {
-                    if (p.value !== "null" && p.value !== "" && p.value.indexOf("\n") < 0 &&
-                        p.value.indexOf("Ext.") < 0 && p.name !== 'alwaysOnTop' && p.name !== 'autoDestroy' && p.name !== 'toFrontOnShow' && p.name !== 'xtype') {
-                        var value = p.value.trim();
+                try {
+                    if (typeof p.value !== 'undefined') {
+                        var noEnter = true;
+                        if (typeof p.value === 'string') {
+                            if (p.value.indexOf("\n") >= 0 &&
+                                p.value.indexOf("Ext.") < 0)
+                                noEnter = false;
 
-                        if (value.indexOf("'") == 0)
-                            value = value.substring(1, value.length - 1);
-
-                        if (value === 'true')
-                            value = true;
-                        else if (value === 'false')
-                            value = false;
-                        else if (value === '[]')
-                            value = [];
-
-                        try {
-                            if (value.indexOf("{") == 0 || value.indexOf("[") == 0) /// if JSON object
-                                value = eval('(' + value + ')');
-                        } catch (e) {}
-
-                        if (!isFloat) {
-                            if (p.name === 'x' || p.name === 'y')
-                                value = 'undefined';
                         }
-                        if (typeof value !== 'undefined') {
-                            if (value !== 'undefined') {
-                                cx[p.name] = value;
-                                isSet = true;
+                        if (p.value !== "null" && p.value !== "" && noEnter && p.name !== 'alwaysOnTop' &&
+                            p.name !== 'autoDestroy' && p.name !== 'toFrontOnShow' &&
+                            p.name !== 'xtype') {
+                            var value = p.value.trim();
+
+                            if (value.indexOf("'") == 0)
+                                value = value.substring(1, value.length - 1);
+
+                            if (value === 'true')
+                                value = true;
+                            else if (value === 'false')
+                                value = false;
+                            else if (value === '[]')
+                                value = [];
+
+                            try {
+                                if (value.indexOf("{") == 0 || value.indexOf("[") == 0) /// if JSON object
+                                    value = eval('(' + value + ')');
+                            } catch (e) {}
+
+                            if (!isFloat) {
+                                if (p.name === 'x' || p.name === 'y')
+                                    value = 'undefined';
                             }
-                        }
+                            if (typeof value !== 'undefined') {
+                                if (value !== 'undefined') {
+                                    cx[p.name] = value;
+                                    isSet = true;
+                                }
+                            }
 
+                        }
                     }
+                } catch (e) {
+                    console.log(p.name + ' ' + p.value + '  ' + e);
                 }
                 if (!isSet) {
 
@@ -801,7 +815,7 @@ Ext.define('extJSOpenArchitect.view.ArchitectPanelViewController', {
                     if (typeof p.value !== 'undefined') {
                         if (p.value !== '') {
                             hasEvents = true;
-                            console.log(p.name + ' ' + p.value);
+                            //console.log(p.name + ' ' + p.value);
                             eventList[p.name] = p.value;
                         }
                     }
@@ -845,7 +859,9 @@ Ext.define('extJSOpenArchitect.view.ArchitectPanelViewController', {
                     type: 'rowdrop',
                     recordType: 'component',
                     listeners: {
-                        drop: 'onComponentDrop'
+                        drop: 'onComponentDrop',
+                        dragenter: 'onComponentDragEnter',
+                        dragleave: 'onComponentDragLeave'
 
                     }
                 }];
@@ -853,6 +869,7 @@ Ext.define('extJSOpenArchitect.view.ArchitectPanelViewController', {
         }
 
 
+        cx.items = items;
 
         if (!isFloat) {
             if (onlyComponent)
@@ -871,7 +888,7 @@ Ext.define('extJSOpenArchitect.view.ArchitectPanelViewController', {
                     },
                     listeners: {
                         resize: function (e) {
-                            debugger;
+                            //  debugger;
 
                             var height = e.getHeight();
                             var width = e.getWidth();
@@ -926,7 +943,7 @@ Ext.define('extJSOpenArchitect.view.ArchitectPanelViewController', {
                                                     return p.name === 'height'
                                                 });
                                                 if (hx.length > 0) {
-                                                    if (height === 'auto' || ("" + height).indexOf('px') > 0)
+                                                    if (height === 'auto' || ("" + height).indexOf('px') > 0 || ("" + height).indexOf('%') > 0)
                                                         hx[0].value = height;
                                                     else
                                                         hx[0].value = height + "px";
@@ -946,7 +963,7 @@ Ext.define('extJSOpenArchitect.view.ArchitectPanelViewController', {
                                                     return p.name === 'width'
                                                 });
                                                 if (hx.length > 0) {
-                                                    if (width === 'auto' || ("" + width).indexOf('px') > 0)
+                                                    if (width === 'auto' || ("" + width).indexOf('px') > 0 || ("" + width).indexOf('%') > 0)
                                                         hx[0].value = width;
                                                     else
                                                         hx[0].value = width + "px";
@@ -1007,9 +1024,9 @@ Ext.define('extJSOpenArchitect.view.ArchitectPanelViewController', {
             var renderTo = Ext.ComponentQuery.query('architectpanel')[0].down("#" + parentId);
             renderTo.removeAll();
         } catch (e) {
-            console.log(e);
+            //console.log(e);
             var a = Ext.ComponentQuery.query('architectpanel')[0].down("#" + parentId);
-            debugger;
+            //  debugger;
             a.element.getFirstChild().setHtml("");
         }
     },
@@ -1020,8 +1037,8 @@ Ext.define('extJSOpenArchitect.view.ArchitectPanelViewController', {
         } catch (e) {
             msg = "An Error occured while rendering " + renderConfig.xtype + ". <br/>Please check the configuration." +
                 "<br/>Error: " + e;
-            console.log(msg);
-            Ext.toast(msg, 5000);
+            //console.log(msg);
+            Ext.toast(msg, 2000);
 
         }
     },
@@ -1045,7 +1062,7 @@ Ext.define('extJSOpenArchitect.view.ArchitectPanelViewController', {
         if (Array.isArray(parent)) {
             parent.forEach((p) => {
                 var renderConfig = this.getViewConfig(p);
-                console.log(renderConfig);
+                //console.log(renderConfig);
 
                 if (typeof renderConfig !== 'undefined') {
                     if (renderConfig != null) {
@@ -1185,7 +1202,7 @@ Ext.define('extJSOpenArchitect.view.ArchitectPanelViewController', {
     },
 
     onTemplateOK: function () {
-        debugger;
+
         var form = this.getView().lookup('form');
 
         var isValid = form.validate();
@@ -1202,6 +1219,70 @@ Ext.define('extJSOpenArchitect.view.ArchitectPanelViewController', {
 
                 data.viewName = viewName.replace(/[^a-z0-9]/gi, '');;
 
+                data.components = [];
+
+                var templateData = template[0].data;
+
+                if (typeof templateData.view !== 'undefined') {
+                    var view = templateData.view;
+                    var newComponents = [];
+
+
+                    var cp = Ext.ComponentQuery.query('architectpanel')[0].down("componentpallet");
+
+                    var allComp = cp.getViewModel().getStore('allComponents').getData().items.map((e) => {
+                        return e.data
+                    }).filter((u) => {
+                        return typeof u.alias !== 'undefined';
+                    });
+                    if (Array.isArray(view)) {
+                        view.forEach((v) => {
+                            var cx = this.addNewComponent(v, allComp, "designerPanel");
+                            if (cx != null)
+                                newComponents.push(cx);
+                        })
+                    } else {
+                        var keyCnt = 0;
+                        Object.keys(view).forEach(function (key, index) {
+                            keyCnt++;
+                        });
+                        if (keyCnt > 0) {
+                            var cx = this.addNewComponent(view, allComp, "designerPanel");
+                            if (cx != null)
+                                newComponents.push(cx);
+                        }
+                    }
+                }
+
+                data.components = newComponents;
+
+                //console.log(newComponents);
+
+                data.currentNode = "";
+
+                var that = this;
+                var piTree = Ext.ComponentQuery.query('architectpanel')[0].down("#projectInspector");
+                var store = this.getViewModel().getStore('componentsTree');
+                var treeStore = piTree.getStore();
+                setTimeout(function (e) {
+                    treeStore.setRoot({
+                        text: 'Root',
+                        children: JSON.parse(JSON.stringify(data.components))
+                    });
+                    var ce = that.getView().down("componenteditor");
+                    var cxStore = ce.getViewModel().getStore("configs");
+                    var pxStore = ce.getViewModel().getStore("properties");
+                    var mxStore = ce.getViewModel().getStore("methods");
+                    var exStore = ce.getViewModel().getStore("events");
+
+                    cxStore.loadData([]);
+                    pxStore.loadData([]);
+                    mxStore.loadData([]);
+                    exStore.loadData([]);
+
+                    that.redrawComponent();
+
+                }, 100);
                 this.getView().unmask();
                 this.dialog.hide();
             }
@@ -1209,6 +1290,101 @@ Ext.define('extJSOpenArchitect.view.ArchitectPanelViewController', {
             Ext.toast("Please enter all details", 2000);
         }
     },
+
+    addNewComponent: function (c, allComp, currentComponentItemId) {
+
+        var component = null;
+
+        if (typeof c.xtype === 'undefined')
+            c.xtype = 'label';
+
+        var thisCx = allComp.filter((u) => {
+            return typeof u.alias !== 'undefined';
+        }).filter((u) => {
+            return u.alias.indexOf('widget.' + c.xtype) >= 0;
+        });
+
+        if (thisCx.length > 0)
+            component = thisCx[0];
+
+        if (component != null) {
+            var data = this.getViewModel().getData();
+
+            var thisComponent = JSON.parse(JSON.stringify(component));
+            thisComponent.children = [];
+            var alias = component.alias ? (component.alias.indexOf(',') > 0 ? component.alias.split(',')[0] : component.alias) : component.name;
+            var name = component.name;
+            var thisAlias = alias.replace("widget.", "");
+            thisComponent.text = thisAlias.replace(
+                /\w\S*/g,
+                function (txt) {
+                    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+                }
+            );
+            thisComponent.leaf = true;
+
+            this.addProperties(thisComponent, component.extended);
+
+            var configs = thisComponent.items.filter((u) => {
+                return u.$type === 'configs'
+            });
+            if (typeof configs[0].items !== 'undefined') {
+                if (configs[0].items.length > 0) {
+                    Object.keys(c).forEach(function (key, index) {
+                        var thisProp = configs[0].items.filter((m) => {
+                            return m.name === key && m.name !== 'xtype';
+                        });
+                        if (thisProp.length > 0) {
+                            thisProp.forEach((pr) => {
+                                if (typeof c[key] !== 'undefined') {
+                                    if (typeof c[key] == 'string')
+                                        pr.value = c[key];
+                                    else
+                                        pr.value = JSON.stringify(c[key]);
+                                }
+                            });
+                        }
+                    });
+
+                }
+            }
+            thisComponent.iconCls = (component.extends.indexOf('Container') >= 0 || alias.indexOf('ontainer') >= 0) ?
+                'x-fa fa-inbox' : 'x-fa fa-circle-notch';
+
+            thisComponent.itemId = "component_" + data.itemCount;
+            thisComponent.id = thisComponent.itemId;
+
+            if (currentComponentItemId !== "designerPanel" && currentComponentItemId !== 'parentDesignerPanel')
+                thisComponent.parentId = currentComponentItemId;
+
+
+
+            //data.components.push(thisComponent);
+
+            data.itemCount = data.itemCount + 1;
+
+
+            if (typeof c.items !== 'undefined') {
+                if (c.items.length > 0) {
+                    c.items.forEach((i) => {
+                        var cx = this.addNewComponent(i, allComp, thisComponent.itemId);
+
+                        if (cx != null)
+                            thisComponent.children.push(cx);
+                    })
+                }
+            }
+
+            if (thisComponent.children.length > 0)
+                thisComponent.leaf = false;
+
+            return thisComponent;
+        }
+        return null;
+    },
+
+
+
     destroy: function () {
         Ext.destroy(this.dialog);
 
